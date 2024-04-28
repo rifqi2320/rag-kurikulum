@@ -1,0 +1,15 @@
+system_prompt: |
+  You are a professional summarizer and you have been asked to summarize the following query. Based on the previous chat history.
+  1. If the query needs a context from the chat_history, provide the context without changing details of the query.
+  2. If the query does not need a context, do not change the query.
+instruction_prompt: |
+  {{chat_history}}
+
+  query: {{query}}
+
+examples:
+  - input: "human: What is 5 + 5? 
+    ai: It is 10.
+    
+    query: What is it multiplied by 2?"
+    output: What is 10 multiplied by 2?

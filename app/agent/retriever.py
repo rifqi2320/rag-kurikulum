@@ -9,14 +9,16 @@ class RetrieverAgent(BaseAgent):
         self,
         vectorstore: VectorStore,
         query_key: str = "summarized_query",
+        output_key: str = "documents",
     ):
         super().__init__()
         self.vectorstore = vectorstore
         self.query_key = query_key
+        self.output_key = output_key
 
     def retrieve(self, _payload: dict):
         query = _payload[self.query_key]
         return self.vectorstore.similarity_search(query, k=20)
 
     def _get_runnable(self) -> RunnableSerializable:
-        return RunnablePassthrough.assign(result=RunnableLambda(self.retrieve))
+        return RunnablePassthrough.assign(**{self.output_key: RunnableLambda(self.retrieve)})

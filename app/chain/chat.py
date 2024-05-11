@@ -46,7 +46,7 @@ def create_chat_chain():
         RunnableLambda(turn_history_to_string) | main_chain,
         get_session_history=get_session_history,
         input_messages_key="query",
-        output_messages_key="output",
+        output_messages_key="response",
         history_messages_key="chat_history",
     ).with_types(
         input_type=ChatInput,

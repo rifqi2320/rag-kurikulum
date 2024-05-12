@@ -16,8 +16,11 @@ class ResponderAgent(BaseLLMAgent):
 
     def generate_prompt(self, _payload: dict):
         query = _payload["summarized_query"]
-        relevant_docs = _payload[self.query_key][0].page_content
-        final_query = query + '\n\n' + 'Berikut merupakan dokumen yang relevan untuk menjawab pertanyaan di atas:\n' + relevant_docs
+        docs_content = _payload[self.query_key].page_content
+        docs_book = _payload[self.query_key].metadata['id'].split('_')[0]
+        docs_page = _payload[self.query_key].metadata['id'].split('_')[1]
+        relevant_docs = f"Sertakan buku dan halaman yang relevan pada jawaban. Dokumen yang relevan untuk menjawab pertanyaan di atas adalah buku {docs_book} halaman {docs_page}:\n{docs_content}"
+        final_query = query + '\n\n' + relevant_docs
         return final_query
 
     def _get_runnable(self) -> RunnableSerializable:

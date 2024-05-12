@@ -1,6 +1,6 @@
-from .rag import create_rag_chain
-from agent import IntentClassifierAgent, RouteAgent
+from agent import IntentClassifierAgent, RouteAgent, QuerySummarizerAgent, RetrieverAgent, ResponderAgent
 from util import LLMUtils
+from vectorstore import vectorstore
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from langchain_community.chat_message_histories import ChatMessageHistory
 from langchain_core.runnables.history import RunnableWithMessageHistory
@@ -30,23 +30,27 @@ def turn_history_to_string(_payload: dict):
         chat_history += f"{message.type}: {message.content}\n"
     return {**_payload, "chat_history": chat_history}
 
+def extract_response(payload):
+    response = payload.get('result', {}).get('response', "Maaf, saya tidak bisa menemukan jawaban untuk pertanyaan ini.")
+    # return {'output': response}
+    return response
 
 def create_chat_chain():
     llm = LLMUtils.get_llm("haiku")
+
+    rag_chain = QuerySummarizerAgent(llm=llm) | RetrieverAgent(vectorstore) | ResponderAgent(llm=llm)
     route_dict = {
-        "search": create_rag_chain(),
+        "search": rag_chain,
         "conversation": llm,
     }
+    main_chain = IntentClassifierAgent(llm=llm) | RouteAgent(route_dict=route_dict, route_key="intent")
 
-    main_chain = IntentClassifierAgent(llm=llm) | RouteAgent(
-        route_dict=route_dict, route_key="intent"
-    )
 
     return RunnableWithMessageHistory(
-        RunnableLambda(turn_history_to_string) | main_chain,
+        RunnableLambda(turn_history_to_string) | main_chain | RunnableLambda(extract_response),
         get_session_history=get_session_history,
         input_messages_key="query",
-        output_messages_key="response",
+        output_messages_key="output",
         history_messages_key="chat_history",
     ).with_types(
         input_type=ChatInput,

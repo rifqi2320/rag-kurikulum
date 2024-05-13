@@ -23,9 +23,8 @@ class IntentClassifierAgent(BaseLLMAgent):
                 self.output_key: self.prompt.partial(
                     format_instructions=output_parser.get_format_instructions()
                 )
-                | RunnableLambda(
-                    lambda _payload: print(_payload)
-                    or self.llm | output_parser | RunnableUtils.enum_to_str()
-                )
+                | self.llm
+                | output_parser
+                | RunnableUtils.enum_to_str()
             }
         )

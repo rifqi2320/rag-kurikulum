@@ -29,6 +29,7 @@ class Config:
 
     env: ConfigDict
     openai_embedding: ConfigDict
+    cohere: ConfigDict
 
     llms: ConfigDict
     prompts: ConfigDict

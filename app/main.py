@@ -10,7 +10,9 @@ app = FastAPI(
 
 chat_chain = create_chat_chain()
 
-add_routes(app, chat_chain, path="/chat")
+
+add_routes(app, chat_chain, path="/chat", playground_type="chat")
+
 
 if __name__ == "__main__":
     import uvicorn

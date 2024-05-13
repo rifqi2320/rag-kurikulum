@@ -46,7 +46,7 @@ def extract_text_from_pdf(
                     ),
                 },
             }
-            for page in pages
+            for page in tqdm(pages, desc=f"{doc_name}")
         ],
     )
     df.to_csv(os.path.join(PROCESSED_DATA, output_name), index=False)

@@ -7,23 +7,27 @@ system_prompt: |
 instruction_prompt: |
   {chat_history}
 
+  This is the query you need to classify:
   query: {query}
 
 examples:
   - input: "human: Siapakah presiden pertama Indonesia?
     ai: Ir. Soekarno merupakan presiden pertama Indonesia bersama dengan wakilnya Mohammad Hatta.
     
+    This is the query you need to classify:
     query: Siapa wakil presiden pertama Indonesia?"
     output: conversation
 
   - input: "human: Siapakah presiden pertama Indonesia?
     ai: Soekarno merupakan presiden pertama Indonesia.
     
+    This is the query you need to classify:
     query: Apa nama ibu kota Indonesia?"
     output: search
 
   - input: "
-  
+
+    This is the query you need to classify:
     query: Siapakah presiden pertama Indonesia?"
     output: search
 

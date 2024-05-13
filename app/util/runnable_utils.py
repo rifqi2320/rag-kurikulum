@@ -9,3 +9,11 @@ class RunnableUtils:
             return enum.name
 
         return RunnableLambda(fn)
+
+    @staticmethod
+    def print_payload() -> RunnableLambda:
+        def fn(_payload):
+            print(_payload)
+            return _payload
+
+        return RunnableLambda(fn)
